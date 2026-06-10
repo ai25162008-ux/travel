@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Travel Highlights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ivory: #FAFAF5;
+  --ivory-deep: #F3F2EB;
+  --ivory-card: #FFFFF8;
+  --espresso: #1C1917;
+  --espresso-mid: #44403C;
+  --espresso-light: #78716C;
+  --terra: #E0533C;
+  --terra-light: #F2896F;
+  --terra-pale: #FDF0ED;
+  --sage: #7A9E87;
+  --sage-pale: #EEF4F0;
+  --gold: #C9A84C;
+  --gold-pale: #FBF5E6;
+  --cream-border: #E8E4DC;
+  --shadow-soft: 0 2px 20px rgba(28,25,23,0.07);
+  --shadow-card: 0 8px 40px rgba(28,25,23,0.10);
+  --shadow-lift: 0 16px 56px rgba(28,25,23,0.16);
+  --radius-card: 20px;
+  --radius-pill: 100px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ivory);
+  color: var(--espresso);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Grain overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.5;
+}
+
+.app {
+  max-width: 440px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ────────────────────────────────
+   HEADER
+──────────────────────────────── */
+.header {
+  padding: 52px 24px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.header-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--terra);
+}
+
+.header-eyebrow-text {
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terra);
+  font-weight: 500;
+}
+
+.header-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  line-height: 1.08;
+  color: var(--espresso);
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.header-title em {
+  font-style: italic;
+  color: var(--terra);
+}
+
+.header-sub {
+  font-size: 13.5px;
+  color: var(--espresso-light);
+  line-height: 1.65;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.header-deco {
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(224,83,60,0.08), transparent 70%);
+  pointer-events: none;
+}
+
+.header-stats {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cream-border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--espresso);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--espresso-light);
+}
+
+/* ────────────────────────────────
+   FILTER TABS
+──────────────────────────────── */
+.filter-wrap {
+  padding: 0 0 0 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 28px;
+}
+.filter-wrap::-webkit-scrollbar { display: none; }
+
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  padding-right: 24px;
+  width: max-content;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--cream-border);
+  background: var(--ivory-card);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--espresso-mid);
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 0.01em;
+}
+
+.tab-icon { font-size: 13px; }
+
+.tab:hover {
+  border-color: var(--terra-light);
+  color: var(--terra);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(224,83,60,0.1);
+}
+
+.tab.active {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(224,83,60,0.32);
+  transform: translateY(-1px);
+}
+
+/* ────────────────────────────────
+   SECTION LABEL
+──────────────────────────────── */
+.section-label {
+  padding: 0 24px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.section-label-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--espresso-mid);
+  font-style: italic;
+}
+
+.section-count {
+  font-size: 11px;
+  color: var(--espresso-light);
+  letter-spacing: 0.12em;
+}
+
+/* ────────────────────────────────
+   CARD LIST
+──────────────────────────────── */
+.card-list {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ────────────────────────────────
+   RANKING CARD
+──────────────────────────────── */
+.card {
+  background: var(--ivory-card);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(232,228,220,0.6);
+  transition: box-shadow 0.32s ease, transform 0.32s ease;
+  cursor: default;
+
+  opacity: 0;
+  transform: translateY(24px);
+  animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-3px);
+}
+
+@keyframes cardIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Image area */
+.card-image {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image-inner {
+  width: 100%; height: 100%;
+  transition: transform 0.6s ease;
+  position: relative;
+}
+
+.card-image-inner img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.4s ease;
+}
+
+.card-image-inner img.loading {
+  opacity: 0;
+}
+
+.card-image-inner img.loaded {
+  opacity: 1;
+}
+
+.card:hover .card-image-inner {
+  transform: scale(1.04);
+}
+
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(28,25,23,0.0) 30%,
+    rgba(28,25,23,0.55) 100%
+  );
+}
+
+/* Rank badge */
+.rank-badge {
+  position: absolute;
+  top: 14px; left: 14px;
+  z-index: 2;
+}
+
+.rank-badge-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.rank-no {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.rank-label {
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.rank-1 .rank-badge-inner { background: rgba(201,168,76,0.75); border-color: rgba(201,168,76,0.5); }
+.rank-2 .rank-badge-inner { background: rgba(140,140,160,0.75); border-color: rgba(200,200,210,0.4); }
+.rank-3 .rank-badge-inner { background: rgba(176,120,80,0.75); border-color: rgba(210,160,100,0.4); }
+.rank-other .rank-badge-inner { background: rgba(28,25,23,0.55); }
+
+/* Category pill on image */
+.card-category-pill {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  z-index: 2;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: 0.08em;
+  font-weight: 400;
+}
+
+/* Card body */
+.card-body {
+  padding: 20px 20px 18px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.card-region {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--terra);
+  font-weight: 500;
+}
+
+.card-meta-sep {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--cream-border);
+}
+
+.card-country {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--espresso-light);
+}
+
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--espresso);
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.card-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--espresso-mid);
+  font-weight: 300;
+  margin-bottom: 16px;
+}
+
+/* Card footer */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--cream-border);
+}
+
+.stars {
+  display: flex;
+  gap: 3px;
+}
+
+.star {
+  font-size: 12px;
+  color: var(--cream-border);
+  transition: color 0.2s;
+}
+
+.star.filled { color: var(--gold); }
+
+.card-score {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--espresso-light);
+  margin-left: 6px;
+}
+
+.card-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.heart-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cream-border);
+  background: var(--ivory);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  -webkit-tap-highlight-color: transparent;
+  font-size: 15px;
+  color: var(--cream-border);
+}
+
+.heart-btn:hover {
+  border-color: var(--terra-light);
+  color: var(--terra-light);
+  transform: scale(1.12);
+}
+
+.heart-btn.liked {
+  border-color: var(--terra);
+  background: var(--terra-pale);
+  color: var(--terra);
+}
+
+.heart-btn.liked:hover { transform: scale(1.12); }
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.heart-btn.pop { animation: heartPop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+.visit-btn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--espresso);
+  background: transparent;
+  color: var(--espresso);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.visit-btn:hover {
+  background: var(--espresso);
+  color: var(--ivory);
+}
+
+/* ────────────────────────────────
+   ADD FORM SECTION
+──────────────────────────────── */
+.add-section {
+  margin: 36px 20px 0;
+  background: var(--ivory-card);
+  border-radius: var(--radius-card);
+  border: 1.5px dashed var(--cream-border);
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.add-section.open {
+  border-style: solid;
+  border-color: var(--terra-light);
+}
+
+.add-toggle {
+  width: 100%;
+  padding: 22px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.add-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.add-toggle-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--terra-pale);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.add-section.open .add-toggle-icon {
+  background: var(--terra);
+}
+
+.add-toggle-texts {
+  text-align: left;
+}
+
+.add-toggle-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px;
+  color: var(--espresso);
+  margin-bottom: 2px;
+}
+
+.add-toggle-sub {
+  font-size: 11.5px;
+  color: var(--espresso-light);
+  font-style: italic;
+}
+
+.add-chevron {
+  font-size: 18px;
+  color: var(--espresso-light);
+  transition: transform 0.32s ease;
+}
+
+.add-section.open .add-chevron {
+  transform: rotate(180deg);
+}
+
+/* Form */
+.add-form-wrap {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.add-section.open .add-form-wrap {
+  max-height: 700px;
+}
+
+.add-form {
+  padding: 0 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid var(--cream-border);
+  padding-top: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--espresso-light);
+  font-weight: 500;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background: var(--ivory);
+  border: 1.5px solid var(--cream-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--espresso);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  width: 100%;
+  -webkit-appearance: none;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--terra);
+  box-shadow: 0 0 0 3px rgba(224,83,60,0.08);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--espresso-light);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.form-textarea { resize: none; line-height: 1.65; }
+
+.form-select { cursor: pointer; }
+
+/* Star rating input */
+.star-input {
+  display: flex;
+  gap: 6px;
+}
+
+.star-input-btn {
+  font-size: 22px;
+  color: var(--cream-border);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.18s, transform 0.18s;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
+}
+
+.star-input-btn:hover,
+.star-input-btn.on { color: var(--gold); transform: scale(1.15); }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.form-submit {
+  width: 100%;
+  height: 50px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: linear-gradient(135deg, var(--terra), var(--terra-light));
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(224,83,60,0.3);
+  margin-top: 4px;
+}
+
+.form-submit:hover {
+  box-shadow: 0 10px 28px rgba(224,83,60,0.4);
+  transform: translateY(-1px);
+}
+
+.form-submit:active { transform: translateY(0); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 30px;
+  display: none;
+}
+
+.empty-state.visible { display: block; }
+
+.empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+
+.empty-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: var(--espresso-light);
+  font-style: italic;
+}
+
+/* Footer */
+.page-footer {
+  text-align: center;
+  padding: 40px 24px 48px;
+  margin-top: 8px;
+}
+
+.footer-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.footer-ornament {
+  flex: 1;
+  height: 1px;
+  background: var(--cream-border);
+}
+
+.footer-icon { font-size: 14px; opacity: 0.4; }
+
+.footer-text {
+  font-size: 11px;
+  color: var(--espresso-light);
+  letter-spacing: 0.12em;
+  opacity: 0.6;
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--espresso);
+  color: var(--ivory);
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  z-index: 9999;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(28,25,23,0.24);
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Animation delays for staggered cards */
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.10s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.20s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+.card:nth-child(6) { animation-delay: 0.30s; }
+.card:nth-child(7) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-deco"></div>
+    <div class="header-eyebrow">
+      <span class="header-dot"></span>
+      <span class="header-eyebrow-text">Travel Highlights</span>
+    </div>
+    <h1 class="header-title">My Favourite<br><em>Places</em></h1>
+    <p class="header-sub">あの旅の記憶を、美しく残す。</p>
+    <div class="header-stats">
+      <div class="stat">
+        <span class="stat-num" id="totalCount">7</span>
+        <span class="stat-label">Spots</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="countryCount">7</span>
+        <span class="stat-label">Countries</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="likedCount">0</span>
+        <span class="stat-label">Liked</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- FILTER TABS -->
+  <div class="filter-wrap">
+    <div class="filter-tabs" id="filterTabs">
+      <button class="tab active" data-cat="all"><span class="tab-icon">🌍</span> すべて</button>
+      <button class="tab" data-cat="nature"><span class="tab-icon">🏔️</span> 自然・絶景</button>
+      <button class="tab" data-cat="culture"><span class="tab-icon">🏛️</span> 歴史・文化</button>
+      <button class="tab" data-cat="gourmet"><span class="tab-icon">🍽️</span> グルメ</button>
+      <button class="tab" data-cat="city"><span class="tab-icon">🌆</span> 都市・街</button>
+    </div>
+  </div>
+
+  <!-- SECTION LABEL -->
+  <div class="section-label">
+    <span class="section-label-text" id="sectionLabel">World Rankings</span>
+    <span class="section-count" id="sectionCount"></span>
+  </div>
+
+  <!-- CARD LIST -->
+  <div class="card-list" id="cardList"></div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">🗺️</div>
+    <p class="empty-text">このカテゴリにはまだスポットがありません。<br>あなたの旅を追加してください。</p>
+  </div>
+
+  <!-- ADD SECTION -->
+  <div class="add-section" id="addSection">
+    <button class="add-toggle" id="addToggle" onclick="toggleForm()">
+      <div class="add-toggle-left">
+        <div class="add-toggle-icon" id="addToggleIcon">✈️</div>
+        <div class="add-toggle-texts">
+          <div class="add-toggle-title">感動した場所を追加する</div>
+          <div class="add-toggle-sub">あなたの旅を記録しよう</div>
+        </div>
+      </div>
+      <span class="add-chevron">⌄</span>
+    </button>
+    <div class="add-form-wrap">
+      <div class="add-form" id="addForm">
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">スポット名</label>
+            <input class="form-input" id="fName" placeholder="例: ウユニ塩湖" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">国・地域</label>
+            <input class="form-input" id="fCountry" placeholder="例: ボリビア" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">エリア</label>
+            <input class="form-input" id="fRegion" placeholder="例: 南米" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">カテゴリ</label>
+            <select class="form-select" id="fCat">
+              <option value="nature">🏔️ 自然・絶景</option>
+              <option value="culture">🏛️ 歴史・文化</option>
+              <option value="gourmet">🍽️ グルメ</option>
+              <option value="city">🌆 都市・街</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">感動した理由</label>
+          <textarea class="form-textarea" id="fDesc" rows="3" placeholder="あの朝の光、あの香り、あの感動をそのままに…"></textarea>
+        </div>
+        <div class="form-field">
+          <label class="form-label">評価</label>
+          <div class="star-input" id="starInput">
+            <button class="star-input-btn" data-v="1">★</button>
+            <button class="star-input-btn" data-v="2">★</button>
+            <button class="star-input-btn" data-v="3">★</button>
+            <button class="star-input-btn" data-v="4">★</button>
+            <button class="star-input-btn" data-v="5">★</button>
+          </div>
+        </div>
+        <button class="form-submit" onclick="submitSpot()">この場所を記録する ✦</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div class="footer-line">
+      <span class="footer-ornament"></span>
+      <span class="footer-icon">✦</span>
+      <span class="footer-ornament"></span>
+    </div>
+    <p class="footer-text">TRAVEL HIGHLIGHTS — YOUR JOURNEY, YOUR STORY</p>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────
+const SPOTS = [
+  {
+    id: 1, rank: 1,
+    name: 'カッパドキア',
+    country: 'トルコ', region: '中東・トルコ',
+    cat: 'nature',
+    desc: '夜明け前の漆黒に、無数の熱気球が炎を灯す。大地が息をするようにゆっくり浮かび上がるその光景は、この世のものとは思えない美しさだった。',
+    rating: 5,
+    photo: 'https://images.unsplash.com/photo-1641128324972-af3212f0f6bd?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #E8B89A 0%, #D4845E 40%, #8B4A3C 100%)',
+    liked: false
+  },
+  {
+    id: 2, rank: 2,
+    name: 'ウユニ塩湖',
+    country: 'ボリビア', region: '南米',
+    cat: 'nature',
+    desc: '雨季の薄い水膜が、空と大地の境界線を消し去る。自分が空の中に立っているような感覚—あれは一生忘れられない孤独で完璧な瞬間だった。',
+    rating: 5,
+    photo: 'https://images.unsplash.com/photo-1749937941321-a946dacd997e?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #A8C8E8 0%, #6A9DC8 45%, #3A6B9F 100%)',
+    liked: false
+  },
+  {
+    id: 3, rank: 3,
+    name: 'アマルフィ海岸',
+    country: 'イタリア', region: 'ヨーロッパ',
+    cat: 'culture',
+    desc: 'レモンの香りが漂う断崖の細い路地。紺碧のティレニア海を見下ろしながら飲んだ地元のリモンチェッロの味が、今もあの午後の光と一緒に蘇る。',
+    rating: 5,
+    photo: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #F0C27A 0%, #E87D55 40%, #2E7D8C 100%)',
+    liked: false
+  },
+  {
+    id: 4, rank: 4,
+    name: '屋久島',
+    country: '日本', region: '九州・南西諸島',
+    cat: 'nature',
+    desc: '樹齢7200年と言われる縄文杉の前に立ったとき、自分という存在の小ささを、初めて清々しく受け入れられた気がした。苔の緑と雨の音が永遠に続くような森だった。',
+    rating: 4,
+    photo: 'https://images.unsplash.com/photo-1576675784201-0e142b423952?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #8FBD99 0%, #4E8B66 50%, #2D5A3D 100%)',
+    liked: false
+  },
+  {
+    id: 5, rank: 5,
+    name: 'マラケシュのメディナ',
+    country: 'モロッコ', region: 'アフリカ・北アフリカ',
+    cat: 'culture',
+    desc: 'スパイスの色彩、職人の槌音、アザーンが重なるあの迷宮。迷子になることが目的地になる、世界で唯一の街。フナ広場の夕暮れは、脳裏に焼き付いた映画だった。',
+    rating: 4,
+    photo: 'https://images.unsplash.com/photo-1624805098931-098c0d918b34?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #F2C16A 0%, #E07840 50%, #7A3520 100%)',
+    liked: false
+  },
+  {
+    id: 6, rank: 6,
+    name: 'ペルー料理の都・リマ',
+    country: 'ペルー', region: '南米',
+    cat: 'gourmet',
+    desc: 'セビーチェ、ロモ・サルタード、ピスコサワー—食の多様性で世界を変えた街。レストラン「セントラル」で味わった標高差をテーマにしたコースは、食という概念を塗り替えた。',
+    rating: 5,
+    photo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #E8C68A 0%, #C4873A 50%, #8B4E1A 100%)',
+    liked: false
+  },
+  {
+    id: 7, rank: 7,
+    name: 'ニューヨーク',
+    country: 'アメリカ', region: '北米',
+    cat: 'city',
+    desc: 'この街は眠らない—それは単なるスローガンではなく、事実だった。深夜3時のチェルシーで出会った即興ジャズと、夜明けのハドソン川の霧が、この街への愛を決定づけた。',
+    rating: 4,
+    photo: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80&fit=crop&auto=format',
+    fallback: 'linear-gradient(160deg, #8A9EC0 0%, #4A5F8A 50%, #1C2440 100%)',
+    liked: false
+  }
+];
+
+const CAT_LABELS = {
+  all: 'World Rankings', nature: '自然・絶景', culture: '歴史・文化', gourmet: 'グルメ', city: '都市・街'
+};
+
+const CAT_ICONS = {
+  nature: '🏔️', culture: '🏛️', gourmet: '🍽️', city: '🌆'
+};
+
+let currentCat = 'all';
+let formRating = 5;
+let spots = [...SPOTS];
+
+// ─── RENDER ─────────────────────────────────────────────
+function getVisible() {
+  return currentCat === 'all' ? spots : spots.filter(s => s.cat === currentCat);
+}
+
+function renderRankBadge(rank) {
+  const cls = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+  return `<div class="rank-badge ${cls}">
+    <div class="rank-badge-inner">
+      <span class="rank-no">${String(rank).padStart(2,'0')}</span>
+      <span class="rank-label">RANK</span>
+    </div>
+  </div>`;
+}
+
+function renderStars(n) {
+  return Array.from({length:5}, (_,i) =>
+    `<span class="star ${i < n ? 'filled' : ''}">★</span>`
+  ).join('');
+}
+
+function renderCard(spot) {
+  const catIcon = CAT_ICONS[spot.cat] || '📍';
+  const catName = CAT_LABELS[spot.cat] || spot.cat;
+  const imgSrc = spot.photo || '';
+  const fallback = spot.fallback || spot.gradient || 'linear-gradient(160deg, #999, #555)';
+  return `
+  <div class="card" data-id="${spot.id}">
+    <div class="card-image">
+      <div class="card-image-inner" style="background: ${fallback};">
+        ${imgSrc ? `<img
+          src="${imgSrc}"
+          alt="${spot.name}"
+          class="loading"
+          onload="this.classList.remove('loading');this.classList.add('loaded')"
+          onerror="this.style.display='none'"
+          crossorigin="anonymous"
+        />` : ''}
+      </div>
+      <div class="card-image-overlay"></div>
+      ${renderRankBadge(spot.rank)}
+      <div class="card-category-pill">${catIcon} ${catName}</div>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span class="card-region">${spot.region}</span>
+        <span class="card-meta-sep"></span>
+        <span class="card-country">${spot.country}</span>
+      </div>
+      <h2 class="card-title">${spot.name}</h2>
+      <p class="card-desc">${spot.desc}</p>
+      <div class="card-footer">
+        <div style="display:flex;align-items:center;gap:2px;">
+          <div class="stars">${renderStars(spot.rating)}</div>
+          <span class="card-score">${spot.rating}.0</span>
+        </div>
+        <div class="card-footer-right">
+          <button class="heart-btn ${spot.liked ? 'liked' : ''}" onclick="toggleLike(${spot.id}, this)" title="お気に入り">
+            ${spot.liked ? '♥' : '♡'}
+          </button>
+          <button class="visit-btn" onclick="showToast('${spot.name}を「行きたい」リストに追加しました ✈️')">行きたい</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render() {
+  const list = document.getElementById('cardList');
+  const empty = document.getElementById('emptyState');
+  const visible = getVisible();
+
+  document.getElementById('sectionLabel').textContent = CAT_LABELS[currentCat] || 'Rankings';
+  document.getElementById('sectionCount').textContent = visible.length > 0 ? `${visible.length} spots` : '';
+
+  if (visible.length === 0) {
+    list.innerHTML = '';
+    empty.classList.add('visible');
+  } else {
+    empty.classList.remove('visible');
+    list.innerHTML = visible.map(renderCard).join('');
+  }
+
+  updateStats();
+}
+
+function updateStats() {
+  document.getElementById('totalCount').textContent = spots.length;
+  const countries = new Set(spots.map(s => s.country));
+  document.getElementById('countryCount').textContent = countries.size;
+  document.getElementById('likedCount').textContent = spots.filter(s => s.liked).length;
+}
+
+// ─── FILTER ─────────────────────────────────────────────
+document.getElementById('filterTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentCat = tab.dataset.cat;
+
+  const list = document.getElementById('cardList');
+  list.style.opacity = '0';
+  list.style.transform = 'translateY(12px)';
+  list.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+
+  setTimeout(() => {
+    render();
+    list.style.opacity = '1';
+    list.style.transform = 'translateY(0)';
+  }, 180);
+});
+
+// ─── LIKE ────────────────────────────────────────────────
+function toggleLike(id, btn) {
+  const spot = spots.find(s => s.id === id);
+  if (!spot) return;
+  spot.liked = !spot.liked;
+  btn.classList.toggle('liked', spot.liked);
+  btn.textContent = spot.liked ? '♥' : '♡';
+  btn.classList.remove('pop');
+  void btn.offsetWidth;
+  btn.classList.add('pop');
+  if (spot.liked) showToast(`${spot.name}をお気に入りに追加しました ♥`);
+  updateStats();
+}
+
+// ─── TOAST ───────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ─── FORM ────────────────────────────────────────────────
+function toggleForm() {
+  document.getElementById('addSection').classList.toggle('open');
+}
+
+// Star rating
+const starBtns = document.querySelectorAll('.star-input-btn');
+starBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    formRating = parseInt(btn.dataset.v);
+    starBtns.forEach(b => b.classList.toggle('on', parseInt(b.dataset.v) <= formRating));
+  });
+});
+// Init star display
+starBtns.forEach(b => b.classList.toggle('on', parseInt(b.dataset.v) <= formRating));
+
+function submitSpot() {
+  const name = document.getElementById('fName').value.trim();
+  const country = document.getElementById('fCountry').value.trim();
+  const region = document.getElementById('fRegion').value.trim();
+  const cat = document.getElementById('fCat').value;
+  const desc = document.getElementById('fDesc').value.trim();
+
+  if (!name || !country) {
+    showToast('スポット名と国名は必須です 🙏');
+    return;
+  }
+
+  const GRADIENTS = [
+    'linear-gradient(160deg, #B8D4C8 0%, #7A9E90 50%, #3D6B5E 100%)',
+    'linear-gradient(160deg, #D4C4E8 0%, #9A7EC4 50%, #5A3E8A 100%)',
+    'linear-gradient(160deg, #E8D4A8 0%, #C4A05C 50%, #8A6020 100%)',
+    'linear-gradient(160deg, #C8D8E8 0%, #6A98BC 50%, #2A5878 100%)',
+    'linear-gradient(160deg, #E8C8C8 0%, #C47A7A 50%, #8A3030 100%)',
+  ];
+
+  const newSpot = {
+    id: Date.now(),
+    rank: spots.length + 1,
+    name, country,
+    region: region || country,
+    cat, desc: desc || 'まだ言葉にできないほどの感動がある。',
+    rating: formRating,
+    photo: '',
+    fallback: GRADIENTS[Math.floor(Math.random() * GRADIENTS.length)],
+    liked: false
+  };
+
+  spots.push(newSpot);
+
+  // Reset form
+  ['fName','fCountry','fRegion','fDesc'].forEach(id => document.getElementById(id).value = '');
+  formRating = 5;
+  starBtns.forEach(b => b.classList.add('on'));
+
+  document.getElementById('addSection').classList.remove('open');
+  currentCat = 'all';
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.cat === 'all'));
+
+  render();
+  showToast(`${newSpot.name}を追加しました ✦`);
+
+  setTimeout(() => {
+    document.getElementById('cardList').lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+// ─── INIT ────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
